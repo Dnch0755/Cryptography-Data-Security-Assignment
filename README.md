@@ -1,2 +1,2 @@
 # Cryptography-Data-Security-Assignment
-This Assignment will be mainly focusing on the Modular implementation of the Advanced Encryption Standard (AES-128). This repository contains 8 interoperable programs covering the full encryption/decryption pipeline, including Key Generation and Inverse transformations.
+This assignment focuses on the modular implementation of the Data Encryption Standard (DES). This repository contains 8 interoperable programs covering the DES Key Schedule (PC-1, PC-2, and Bit Shifting) and the Encryption pipeline, including Initial Permutations, the Feistel Function (S-Boxes and Expansion), and Inverse Initial Permutations.
