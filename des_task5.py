@@ -1,6 +1,6 @@
 # Question 5 DES: Expansion + XOR with Round Key
 
-# DES Expansion Table (E-table)
+# DES Expansion Table
 E_TABLE = [
     32, 1, 2, 3, 4, 5,
     4, 5, 6, 7, 8, 9,
@@ -31,7 +31,7 @@ def des_expansion(right_32bits):
 def xor_bits(a, b):
     return ''.join('1' if x != y else '0' for x, y in zip(a, b))
 
-# MAIN PROGRAM
+# Main Program
 def main():
     print("DES Question 5: Expansion + XOR\n")
 
@@ -49,7 +49,7 @@ def main():
     # XOR with round key
     xor_result = xor_bits(expanded_right, round_key_bin)
 
-    # OUTPUT SECTION
+    # Output
     output_hex = bin_to_hex(xor_result)
 
     print("\n" + "-" * 50)
@@ -58,3 +58,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
