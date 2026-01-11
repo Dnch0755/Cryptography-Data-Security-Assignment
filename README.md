@@ -1,2 +1,2 @@
 # Cryptography-Data-Security-Assignment
-This assignment focuses on the modular implementation of the Data Encryption Standard (DES). This repository contains 8 interoperable programs covering the DES Key Schedule (PC-1, PC-2, and Bit Shifting) and the Encryption pipeline, including Initial Permutations, the Feistel Function (S-Boxes and Expansion), and Inverse Initial Permutations.
+This project demonstrates a component-based approach to the Data Encryption Standard (DES). To satisfy assignment requirements, our team of 8 has created 8 interoperable Python programs. Each script functions as an independent module—handling specific tasks like Key Generation or S-Box substitution—while ensuring that the output of one module serves as the precise input for the next.
