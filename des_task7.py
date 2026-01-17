@@ -10,63 +10,56 @@
 import sys
 
 def execute_task_7():
-    # Define the DES P-Box using a dictionary
-    # This maps the output position (1-32) to the source bit position from the S-Box
-    P_MAP = {
-        1: 16, 2: 7, 3: 20, 4: 21, 5: 29, 6: 12, 7: 28, 8: 17,
-        9: 1, 10: 15, 11: 23, 12: 26, 13: 5, 14: 18, 15: 31, 16: 10,
-        17: 2, 18: 8, 19: 24, 20: 14, 21: 32, 22: 27, 23: 3, 24: 9,
-        25: 19, 26: 13, 27: 30, 28: 6, 29: 22, 30: 11, 31: 4, 32: 25
-    }
+    # Standard DES P-Box table 
+    p_table = [
+        16, 7, 20, 21, 29, 12, 28, 17,
+        1, 15, 23, 26, 5, 18, 31, 10,
+        2, 8, 24, 14, 32, 27, 3, 9,
+        19, 13, 30, 6, 22, 11, 4, 25
+    ]
 
-    print("--- DES Project: Task 7 Module ---")
+    print("\n" + "="*50)
+    print("  DES ENCRYPTION PROCESSOR - TASK 07  ")
+    print("="*50)
     
-    # 1. Get Input from previous tasks
-    input_from_6 = input("Enter 32-bit S-Box Result (in hex (0x5C421307)): ").strip()
-    input_from_4 = input("Enter 32-bit Left Side (in hex (0x1A2B3C4D)): ").strip()
-
-    # Clean the input (remove '0x' if present)
-    if input_from_6.lower().startswith("0x"):
-        input_from_6 = input_from_6[2:]
-    if input_from_4.lower().startswith("0x"):
-        input_from_4 = input_from_4[2:]
-
-    # 2. Validate Input Length
-    # We expect 8 hex chars for 32 bits (8 * 4 = 32)
-    if len(input_from_6) != 8 or len(input_from_4) != 8:
-        print(f"\n[ERROR] Invalid length! Expected 8 hex characters (32 bits).")
-        print(f"S-Box Input: {len(input_from_6)} chars | Left Side Input: {len(input_from_4)} chars")
-        return
-
     try:
-        # 3. Conversion to Binary Strings
-        # Use zfill(32) to ensure leading zeros are preserved [cite: 41]
-        sbox_bits = bin(int(input_from_6, 16))[2:].zfill(32)
-        left_bits = bin(int(input_from_4, 16))[2:].zfill(32)
+        # User input with requested examples and original variable names
+        val_from_task6 = input(" [INPUT] S-Box Result (0x5C421307): ").strip()
+        val_from_task4 = input(" [INPUT] Left Side L(i) (0x1A2B3C4D): ").strip() 
 
-        print(f"\n[INFO] Input Validated.")
+        # Clean 0x prefix if present for interoperability 
+        h6 = val_from_task6[2:] if val_from_task6.lower().startswith("0x") else val_from_task6
+        h4 = val_from_task4[2:] if val_from_task4.lower().startswith("0x") else val_from_task4
 
-        # PROCESS 1: P-Box Permutation
-        # Iterate through our map to rearrange the bits [cite: 43]
-        permuted_string = "".join(sbox_bits[P_MAP[i] - 1] for i in range(1, 33))
+        # Check for 32-bit length (8 hex digits)
+        if len(h6) != 8 or len(h4) != 8:
+            print("\n [!] ERROR: Please enter exactly 8 hex characters.")
+            return
 
-        # PROCESS 2: Bitwise XOR with the Left Side
-        # This produces the Right 32-bit for the next round [cite: 43]
-        result_int = int(permuted_string, 2) ^ int(left_bits, 2)
+        # Convert hex to binary strings with padding to 32 bits
+        bits6 = bin(int(h6, 16))[2:].zfill(32)
+        bits4 = bin(int(h4, 16))[2:].zfill(32)
+
+        # 1. Perform Permutation (P) 
+        permuted_bits = ""
+        for pos in p_table:
+            permuted_bits += bits6[pos - 1]
+
+        # 2. XOR with Left Side 
+        res_int = int(permuted_bits, 2) ^ int(bits4, 2)
         
-        # OUTPUT SECTION
-        # Formatted for Task 8: Inverse Initial Permutation [cite: 45]
-        output_hex = hex(result_int)[2:].zfill(8).upper()
+        # Format the final 32-bit Right result for Task 8 [cite: 43, 45]
+        final_hex = hex(res_int)[2:].zfill(8).upper()
         
-        print("-" * 60)
-        print(f"RESULT: Round (i+1) Right 32-bit")
-        print(f"Hex Output: 0x{output_hex}")
-        print("-" * 60)
-        print("\n[NEXT STEP]")
-        print(f"Pass this value (0x{output_hex}) to the member doing Task 8.")
+        # Simple Results Display
+        print("\n" + "-"*50)
+        print(f" >> CALCULATION SUCCESSFUL")
+        print(f" >> Round (i+1) Right Side: 0x{final_hex}")
+        print("-"*50)
+        print(" STATUS: Ready for Task 8 input.")
 
-    except ValueError:
-        print("\n[ERROR] Input contains non-hexadecimal characters.")
+    except Exception:
+        print("\n [!] ERROR: Invalid Hexadecimal format detected.")
 
 if __name__ == "__main__":
     execute_task_7()
