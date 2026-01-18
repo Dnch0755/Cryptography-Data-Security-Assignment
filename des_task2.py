@@ -1,7 +1,6 @@
 def hex_to_bin(hex_str, bits=56):
     """
     Convert a hex string to a binary string of fixed length.
-    
     """
     int_val = int(hex_str, 16)
     bin_str = bin(int_val)[2:].zfill(bits)
@@ -11,7 +10,6 @@ def hex_to_bin(hex_str, bits=56):
 def bin_to_hex(bin_str):
     """
     Convert a binary string to a hex string.
-    
     """
     int_val = int(bin_str, 2)
     hex_str = hex(int_val)[2:].upper().zfill(14)
@@ -21,7 +19,6 @@ def bin_to_hex(bin_str):
 def left_circular_shift(key_half, shifts):
     """
     Perform left circular shift on 28-bit key half.
-    
     """
     return key_half[shifts:] + key_half[:shifts]
 
@@ -29,7 +26,6 @@ def left_circular_shift(key_half, shifts):
 def generate_round_keys(key_56bit):
     """
     Generate 16 round keys by performing left circular shifts.
-    
     """
     # DES shift schedule: number of left shifts per round
     shift_schedule = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
@@ -93,15 +89,15 @@ def main():
     round_keys = generate_round_keys(key_bin)
     
     print(f"\n3. Round Keys (after Left Circular Shifts):")
-    print("   " + "=" * 66)
-    print("   Round | 56-bit Binary Key | Hex (14 digits)")
-    print("   " + "-" * 66)
+    print("   " + "=" * 80)
+    print("   Round | 56-bit Binary Key | Hex")
+    print("   " + "-" * 80)
     
     for round_num, key_binary in round_keys:
         key_hex = bin_to_hex(key_binary)
         print(f"   R{round_num:02d}   | {key_binary} | {key_hex}")
     
-    print("   " + "=" * 66)
+    print("   " + "=" * 80)
     
     # Display shift schedule for reference
     shift_schedule = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
@@ -118,5 +114,6 @@ def main():
     print("Output: 16 round keys (56-bit each) → Input to Task 3 (PC-2)")
     print("=" * 70)
 
-    if __name__ == "__main__":
+
+if __name__ == "__main__":
     main()
