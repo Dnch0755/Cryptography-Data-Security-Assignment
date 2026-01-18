@@ -2,12 +2,6 @@ def hex_to_bin(hex_str, bits=56):
     """
     Convert a hex string to a binary string of fixed length.
     
-    Args:
-        hex_str: Hexadecimal string (with or without '0x' prefix)
-        bits: Target bit length (default: 56)
-    
-    Returns:
-        Binary string of specified length
     """
     int_val = int(hex_str, 16)
     bin_str = bin(int_val)[2:].zfill(bits)
@@ -18,11 +12,6 @@ def bin_to_hex(bin_str):
     """
     Convert a binary string to a hex string.
     
-    Args:
-        bin_str: Binary string (56 bits)
-    
-    Returns:
-        Hexadecimal string with '0x' prefix
     """
     int_val = int(bin_str, 2)
     hex_str = hex(int_val)[2:].upper().zfill(14)
@@ -33,12 +22,6 @@ def left_circular_shift(key_half, shifts):
     """
     Perform left circular shift on 28-bit key half.
     
-    Args:
-        key_half: 28-bit binary string
-        shifts: Number of positions to shift (1 or 2)
-    
-    Returns:
-        28-bit binary string after circular shift
     """
     return key_half[shifts:] + key_half[:shifts]
 
@@ -47,15 +30,6 @@ def generate_round_keys(key_56bit):
     """
     Generate 16 round keys by performing left circular shifts.
     
-    This function implements the DES key schedule by splitting the 56-bit
-    key into two 28-bit halves and performing left circular shifts according
-    to the DES shift schedule.
-    
-    Args:
-        key_56bit: 56-bit binary string (after PC-1)
-    
-    Returns:
-        List of tuples: [(round_number, 56-bit_binary_key), ...]
     """
     # DES shift schedule: number of left shifts per round
     shift_schedule = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
