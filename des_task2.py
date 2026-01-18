@@ -90,7 +90,7 @@ def main():
     
     print(f"\n3. Round Keys (after Left Circular Shifts):")
     print("   " + "=" * 80)
-    print("   Round | 56-bit Binary Key | Hex")
+    print("   Round | 56-bit Binary Key                                        | Hex")
     print("   " + "-" * 80)
     
     for round_num, key_binary in round_keys:
