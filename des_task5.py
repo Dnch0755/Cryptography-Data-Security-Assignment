@@ -37,7 +37,7 @@ def main():
 
     # Input
     round_key_hex = input("Enter 48-bit Round Key (hex, e.g. 0x112233445566): ")
-    right_half_hex = input("Enter 32-bit Right Half (hex, e.g. 0x89ABCDEF): ")
+    right_half_hex = input("Enter 32-bit Right Half (hex, e.g. 0x80668066): ")
 
     # Convert inputs to binary
     round_key_bin = hex_to_bin(round_key_hex, 48)
@@ -58,4 +58,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
