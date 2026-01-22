@@ -1,6 +1,13 @@
-# Question 5 DES: Expansion + XOR with Round Key
+# ==============================================================================
+# (Nafis Aiman Bin Razalee)
+# Cryptography & Data Security Assignment 2025/2026
+# Task 5: DES Encryption - DES Expansion + XOR with Key
+# ==============================================================================
+# INPUT:  48 Bits Round Key, 32 Bits Right (R0) 
+# OUTPUT: 48 Bits to S-Box
+# ==============================================================================
 
-# DES Expansion Table
+# DES Expansion Table (E-table)
 E_TABLE = [
     32, 1, 2, 3, 4, 5,
     4, 5, 6, 7, 8, 9,
@@ -14,34 +21,39 @@ E_TABLE = [
 
 # Convert hex string to binary string
 def hex_to_bin(hex_str, bits):
+    hex_str = hex_str.replace("0x", "").replace("0X", "")
     return bin(int(hex_str, 16))[2:].zfill(bits)
 
 # Convert binary string to hex string
 def bin_to_hex(bin_str):
     return hex(int(bin_str, 2))[2:].upper().zfill(len(bin_str) // 4)
 
-# Perform DES Expansion (32 bits → 48 bits)
+# Perform DES Expansion (32 bits -> 48 bits)
 def des_expansion(right_32bits):
-    expanded = ""
-    for position in E_TABLE:
-        expanded += right_32bits[position - 1]
-    return expanded
+    return ''.join(right_32bits[i - 1] for i in E_TABLE)
 
 # XOR two binary strings
 def xor_bits(a, b):
     return ''.join('1' if x != y else '0' for x, y in zip(a, b))
 
-# Main Program
+# main program
 def main():
-    print("DES Question 5: Expansion + XOR\n")
+    print("DES Question 5: Expansion + XOR (Interoperable with Task 4)\n")
 
-    # Input
+    # Input round key
     round_key_hex = input("Enter 48-bit Round Key (hex, e.g. 0x112233445566): ")
-    right_half_hex = input("Enter 32-bit Right Half (hex, e.g. 0x80668066): ")
-
-    # Convert inputs to binary
     round_key_bin = hex_to_bin(round_key_hex, 48)
-    right_half_bin = hex_to_bin(right_half_hex, 32)
+
+    # Input R0 from Task 4 (binary OR hex)
+    right_half_input = input(
+        "Enter 32-bit Right Half R0 (binary from Task 4 OR hex): "
+    ).strip()
+
+    # Detect binary or hex input
+    if set(right_half_input) <= {'0', '1'} and len(right_half_input) == 32:
+        right_half_bin = right_half_input
+    else:
+        right_half_bin = hex_to_bin(right_half_input, 32)
 
     # DES Expansion
     expanded_right = des_expansion(right_half_bin)
@@ -49,7 +61,7 @@ def main():
     # XOR with round key
     xor_result = xor_bits(expanded_right, round_key_bin)
 
-    # Output
+    # output
     output_hex = bin_to_hex(xor_result)
 
     print("\n" + "-" * 50)
@@ -58,5 +70,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
