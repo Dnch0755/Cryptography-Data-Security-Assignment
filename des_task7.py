@@ -73,7 +73,7 @@ def execute_task_7():
         # Format the final result for Task 8
         final_hex = hex(res_int)[2:].zfill(8).upper()
         
-        # Simple Results Display
+        # Displaying Results
         print("\n" + "-"*50)
         print(f" 2. Performing XOR: P(f) XOR L(i)")
         print(f" >> CALCULATION SUCCESSFUL")
