@@ -1,13 +1,6 @@
 def inverse_initial_permutation(input_hex_string):
     """
     Performs the DES Inverse Initial Permutation (IP^-1) on a 64-bit input.
-    
-    Args:
-        input_hex_string (str): A 64-bit hex string (e.g., "0x0000000000000000")
-                                Representing the combined 32-bit Left and Right halves.
-    
-    Returns:
-        str: The final 64-bit Ciphertext in hex format.
     """
     
     IP_INVERSE_TABLE = [
@@ -20,6 +13,8 @@ def inverse_initial_permutation(input_hex_string):
         34, 2, 42, 10, 50, 18, 58, 26,
         33, 1, 41, 9, 49, 17, 57, 25
     ]
+    
+    # 
 
     # Convert hex string to an integer
     try:
@@ -30,7 +25,7 @@ def inverse_initial_permutation(input_hex_string):
     # Convert integer to a binary string of exactly 64 bits.
     input_bits = bin(val)[2:].zfill(64)
 
-    # Ensure we only have 64 bits and handles overflow (in case it happens)
+    # Ensure we only have 64 bits and handles overflow
     if len(input_bits) > 64:
         print("Warning: Input was larger than 64 bits. Truncating to last 64.")
         input_bits = input_bits[-64:]
@@ -49,27 +44,18 @@ def inverse_initial_permutation(input_hex_string):
     output_int = int(output_bits_str, 2)
     
     # Format as hex, uppercase, with 0x prefix, padded to 16 hex chars (64 bits)
-    # The '016X' format specifier handles the padding and uppercase.
     output_hex = f"0x{output_int:016X}"
 
     return output_hex
 
-# User view
-if __name__ == "__main__":
-    print("DES Task 8: Inverse Initial Permutation")
+def log(message, file_obj=None):
+    """Helper to print to console AND write to file."""
+    print(message)
+    if file_obj:
+        file_obj.write(message + "\n")
 
-    test_input = "0x0000000000000000" 
-    
-    print(f"Input  (Hex): {test_input}")
-    
-    # Run the function
-    cipher_text = inverse_initial_permutation(test_input)
-    
-    print(f"Output (Hex): {cipher_text}")
-    print("-----------------------------------------------")
-
-def run_tests():
-    print("Running Verification Tests...")
+def run_tests(file_obj=None):
+    log("Running Verification Tests...", file_obj)
     
     # Define our test cases: (Input, Expected Output)
     test_cases = [
@@ -84,18 +70,39 @@ def run_tests():
         
         # validating match
         if result == expected:
-            print(f"[PASS] Input: {input_val} -> Output: {result}")
+            log(f"[PASS] Input: {input_val} -> Output: {result}", file_obj)
         else:
-            print(f"[FAIL] Input: {input_val}")
-            print(f"       Expected: {expected}")
-            print(f"       Got:      {result}")
+            log(f"[FAIL] Input: {input_val}", file_obj)
+            log(f"       Expected: {expected}", file_obj)
+            log(f"       Got:      {result}", file_obj)
             all_passed = False
             
     if all_passed:
-        print("\nSUCCESS: All logic checks passed! Your code is ready.")
+        log("\nSUCCESS: All logic checks passed! Your code is ready.", file_obj)
     else:
-        print("\nWARNING: Some tests failed. Check your IP_INVERSE_TABLE values.")
+        log("\nWARNING: Some tests failed. Check your IP_INVERSE_TABLE values.", file_obj)
 
-# Run the tests
+# Main Execution
 if __name__ == "__main__":
-    run_tests()
+    # Define the output filename
+    output_filename = "des8_output.txt"
+    
+    # Open the file in write mode ('w')
+    with open(output_filename, "w") as f:
+        log("DES Task 8: Inverse Initial Permutation", f)
+
+        test_input = "0x0000000000000000" 
+        
+        log(f"Input  (Hex): {test_input}", f)
+        
+        # Run the function
+        cipher_text = inverse_initial_permutation(test_input)
+        
+        log(f"Output (Hex): {cipher_text}", f)
+        log("-----------------------------------------------", f)
+        
+        # Run the verification tests
+        run_tests(file_obj=f)
+        
+        log("-----------------------------------------------", f)
+        log(f"Log saved to {output_filename}", f)
