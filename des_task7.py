@@ -1,13 +1,31 @@
-# ==============================================================================
-# (Ammar Hakimi bin Adnan)
-# Cryptography & Data Security Assignment 2025/2026
-# Task 7: DES Encryption - Permutation (P) and XOR with Left Side
-# ==============================================================================
-# INPUT:  32-bit S-Box Result (Task 6) and 32-bit Left Side (Task 4)
-# PROCESS: Perform P-Box Permutation and XOR with Left Side
-# OUTPUT: Round (i+1) Right 32-bit (Ready for Task 8)
-# ==============================================================================
+"""
+==============================================================================
+(Ammar Hakimi bin Adnan)
+Cryptography & Data Security Assignment 2025/2026
+Task 7: DES Encryption - Permutation (P) and XOR with Left Side
+==============================================================================
+INPUT:  32-bit S-Box Result (Task 6) and 32-bit Left Side (Task 4)
+PROCESS: Perform P-Box Permutation and XOR with Left Side
+OUTPUT: Round (i+1) Right 32-bit (Ready for Task 8)
+==============================================================================
+"""
 import sys
+
+# Simple class to handle dual output (terminal + txt file)
+# This allows the program to print to the terminal and save to a file simultaneously
+class OutputMirror:
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log_file = open(filename, "w")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log_file.write(message)
+
+    def flush(self):
+        # Needed for terminal synchronization
+        self.terminal.flush()
+        self.log_file.flush()
 
 def execute_task_7():
     # Dictionary mapping for the P-Box
@@ -20,12 +38,23 @@ def execute_task_7():
     }
 
     print("\n" + "="*50)
-    print("  DES ENCRYPTION PROCESSOR - TASK 07  ")
+    print("  DES ENCRYPTION - TASK 7  ")
     print("="*50)
     
     try:
         val_from_task6 = input(" [INPUT] S-Box Result: ").strip()
-        val_from_task4 = input(" [INPUT] Left Side L(i): ").strip()
+        val_from_task4 = input(" [INPUT] Left Side, L(i): ").strip()
+
+        # Start capturing output to .txt after inputs are received
+        # This makes sure the file only contains the actual results
+        sys.stdout = OutputMirror("task7_results.txt")
+
+        # Re-printing header for the text file documentation
+        print("\n" + "="*50)
+        print("  DES TASK 7 - CALCULATION LOG  ")
+        print("="*50)
+        print(f" Recorded S-Box Result: {val_from_task6}")
+        print(f" Recorded Left Side, L(i):    {val_from_task4}")
 
         print("\n" + "-"*50)
         print(" >> DATA PROCESSING & INTEROPERABILITY CHECK")
@@ -79,10 +108,15 @@ def execute_task_7():
         print(f" >> CALCULATION SUCCESSFUL")
         print(f" >> Round Right Side: 0x{final_hex}")
         print("-"*50)
+        print(" Log: Results saved to 'task7_results.txt'.")
         print(" STATUS: Ready for Task 8 input.")
 
     except Exception:
         print("\n [!] ERROR: Invalid format detected.")
+    
+    finally:
+        # Resetting the terminal output to normal before finishing
+        sys.stdout = sys.__stdout__
 
 if __name__ == "__main__":
     execute_task_7()
