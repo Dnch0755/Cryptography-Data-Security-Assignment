@@ -38,7 +38,7 @@ def des_expansion(right_32bits):
 def xor_bits(a, b):
     return ''.join('1' if x != y else '0' for x, y in zip(a, b))
 
-# MAIN PROGRAM
+# Main program
 def main():
     print("DES Question 5: Expansion + XOR\n")
 
@@ -56,7 +56,7 @@ def main():
     # XOR with round key
     xor_result = xor_bits(expanded_right, round_key_bin)
 
-    # OUTPUT
+    # Output
     output_hex = bin_to_hex(xor_result)
 
     output_text = (
@@ -80,3 +80,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
