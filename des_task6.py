@@ -166,6 +166,19 @@ def display_output(input_bin, output_bin):
     
     print("\n" + "="*50)
 
+def save_output_to_txt(input_bin, output_bin):
+    """Save the results to a file named sbox_results.txt"""
+    input_hex = hex(int(input_bin, 2))[2:].upper().zfill(12)
+    output_hex = hex(int(output_bin, 2))[2:].upper().zfill(8)
+    
+    with open("sbox_results.txt", "a") as f:
+        f.write(f"Input Hex: 0x{input_hex}\n")
+        f.write(f"Input Bin: {input_bin}\n")
+        f.write(f"Output Hex: 0x{output_hex}\n")
+        f.write(f"Output Bin: {output_bin}\n")
+        f.write("-" * 30 + "\n")
+    print("Result successfully appended to sbox_results.txt")
+
 def main():
     """Main function"""
     print("DES S-BOX Converter")
@@ -180,6 +193,9 @@ def main():
 
     display_output(input_binary, output_binary)
     
+    # Save the output to a text file
+    save_output_to_txt(input_binary, output_binary)
+    
  
     while True:
         again = input("\nRun again? (y/n): ").strip().lower()
@@ -187,6 +203,7 @@ def main():
             input_binary = get_48bit_input()
             output_binary = sbox_substitution(input_binary)
             display_output(input_binary, output_binary)
+            save_output_to_txt(input_binary, output_binary)
         elif again == 'n':
             print("\nProgram ended. Goodbye!")
             break
