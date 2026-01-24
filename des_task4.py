@@ -6,6 +6,7 @@
 # INPUT:  64 bit plaintext in format of 0x1122334455667788
 # OUTPUT: 32 Bits Left (L0), 32 Bits Right (R0), Ready for Fiestel Function
 # ==============================================================================
+
 IP_TABLE = [
     58, 50, 42, 34, 26, 18, 10, 2,
     60, 52, 44, 36, 28, 20, 12, 4,
@@ -17,33 +18,39 @@ IP_TABLE = [
     63, 55, 47, 39, 31, 23, 15, 7
 ]
 # note that IP table is fixed
+def bin32_to_hex(bin32: str) -> str:
+    # convert 32-bit binary string to 8-digit hex string
+    return format(int(bin32, 2), '08X')
 
 def hex_to_bin64(hex_input: str) -> str:
-# convert hex string to 64-bit binary string
+    # convert hex string to 64-bit binary string
     value = int(hex_input, 16)
     return format(value, '064b')
 
 
 def initial_permutation(bin64: str) -> str:
-# apply DES initial permutation
+    # apply DES initial permutation
     return ''.join(bin64[i - 1] for i in IP_TABLE)
 
 
 def des_ip_split(hex_plaintext: str):
     # run everything and perform 
     # DES Initial Permutation and split into L0 and R0
-    # return left and right half, both 32 bits long
+    # return left and right half, both 32 bits long.
+    # also change into hex with helper function above
     bin64 = hex_to_bin64(hex_plaintext)
     permuted = initial_permutation(bin64)
 
-    L0 = permuted[:32]
-    R0 = permuted[32:]
+    L0_bin = permuted[:32]
+    R0_bin = permuted[32:]
 
-    return L0, R0
+    L0_hex = bin32_to_hex(L0_bin)
+    R0_hex = bin32_to_hex(R0_bin)
 
+    return L0_hex, R0_hex
+    # actually running the thing here. plaintext input, 
+    # permuted 32 bits on teh left and right for output, ready for fiestel function
 
-# actually running the thing here. plaintext input, 
-# permuted 32 bits on teh left and right for output, ready for fiestel function
 if __name__ == "__main__":
     plaintext = "0x1122334455667788"
     L0, R0 = des_ip_split(plaintext)
