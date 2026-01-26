@@ -21,6 +21,7 @@ def bin_to_hex(bin_str):
 def validate_parity(key_bin):
     """
     Validate odd parity for each 8-bit block (DES parity bits).
+    Returns True if valid, False otherwise.
     """
     for i in range(0, 64, 8):
         byte = key_bin[i:i + 8]
@@ -62,7 +63,7 @@ def main():
         hex_key = hex_key[2:]
 
     if len(hex_key) != 16:
-        print("Error: Key must be exactly 64 bits (16 hex digits).")
+        print("❌ Error: Key must be exactly 64 bits (16 hex digits).")
         return
 
     key_bin = hex_to_bin(hex_key)
@@ -71,11 +72,22 @@ def main():
     output_lines.append(f"   Binary: {key_bin}")
     output_lines.append(f"   Length: {len(key_bin)} bits")
 
-    if validate_parity(key_bin):
-        output_lines.append("✓ Parity bits are valid (odd parity).")
-    else:
-        output_lines.append("⚠ Warning: Parity bits are invalid (odd parity expected).")
+    # STRICT PARITY CHECK (STOP IF INVALID)
+    if not validate_parity(key_bin):
+        output_lines.append("✗ Parity bits are INVALID (odd parity required).")
+        output_lines.append("\n❌ Program terminated due to invalid parity.")
+        print("\n".join(output_lines))
 
+        # Save output before exiting
+        with open("Des_Task1_Output.txt", "w", encoding="utf-8") as f:
+            f.write("\n".join(output_lines))
+
+        print("\n✔ Output saved to 'Des_Task1_Output.txt'")
+        return
+    else:
+        output_lines.append("✓ Parity bits are valid (odd parity).")
+
+    # PC-1 Permutation
     pc1_output = pc1_permutation(key_bin)
     pc1_hex = bin_to_hex(pc1_output)
 
