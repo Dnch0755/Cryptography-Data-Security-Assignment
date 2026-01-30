@@ -1,8 +1,11 @@
-def inverse_initial_permutation(input_hex_string):
+import datetime
+
+# --- Logic Section ---
+def inverse_initial_permutation(hex_64bit_string):
     """
     Performs the DES Inverse Initial Permutation (IP^-1) on a 64-bit input.
     """
-    
+    # IP^-1 Table (1-based indices)
     IP_INVERSE_TABLE = [
         40, 8, 48, 16, 56, 24, 64, 32,
         39, 7, 47, 15, 55, 23, 63, 31,
@@ -14,95 +17,99 @@ def inverse_initial_permutation(input_hex_string):
         33, 1, 41, 9, 49, 17, 57, 25
     ]
     
-    # 
-
-    # Convert hex string to an integer
+    # 1. Convert hex to integer
     try:
-        val = int(input_hex_string, 16)
+        val = int(hex_64bit_string, 16)
     except ValueError:
-        return "Error: Invalid Hex Input"
+        return "Error"
 
-    # Convert integer to a binary string of exactly 64 bits.
+    # 2. Convert to binary string (64 bits)
     input_bits = bin(val)[2:].zfill(64)
 
-    # Ensure we only have 64 bits and handles overflow
-    if len(input_bits) > 64:
-        print("Warning: Input was larger than 64 bits. Truncating to last 64.")
-        input_bits = input_bits[-64:]
-
-    # Build the output string bit by bit based on the table.
+    # 3. Permute
     output_bits_list = []
-    
     for position in IP_INVERSE_TABLE:
         original_index = position - 1
         output_bits_list.append(input_bits[original_index])
 
-    # combines list of bits into string
     output_bits_str = "".join(output_bits_list)
-
-    #output formation
     output_int = int(output_bits_str, 2)
     
-    # Format as hex, uppercase, with 0x prefix, padded to 16 hex chars (64 bits)
-    output_hex = f"0x{output_int:016X}"
+    # 4. Return formatted hex
+    return f"0x{output_int:016X}"
 
-    return output_hex
 
 def log(message, file_obj=None):
-    """Helper to print to console AND write to file."""
+    """Prints to console and appends to file."""
     print(message)
     if file_obj:
-        file_obj.write(message + "\n")
+        file_obj.write(str(message) + "\n")
 
-def run_tests(file_obj=None):
-    log("Running Verification Tests...", file_obj)
+def get_valid_half_input(prompt_text, file_obj):
+    """
+    Asks for one half (Left or Right). 
+    Strictly enforces 8 hex digits to match '32-bit' requirement.
+    Returns None if error occurs (so we can stop).
+    """
+    user_input = input(prompt_text).strip()
     
-    # Define our test cases: (Input, Expected Output)
-    test_cases = [
-        ("0x00000000FFFFFFFF", "0xAAAAAAAAAAAAAAAA"),
-        ("0xFFFFFFFF00000000", "0x5555555555555555")
-    ]
     
-    all_passed = True
-    
-    for input_val, expected in test_cases:
-        result = inverse_initial_permutation(input_val)
-        
-        # validating match
-        if result == expected:
-            log(f"[PASS] Input: {input_val} -> Output: {result}", file_obj)
-        else:
-            log(f"[FAIL] Input: {input_val}", file_obj)
-            log(f"       Expected: {expected}", file_obj)
-            log(f"       Got:      {result}", file_obj)
-            all_passed = False
-            
-    if all_passed:
-        log("\nSUCCESS: All logic checks passed! Your code is ready.", file_obj)
-    else:
-        log("\nWARNING: Some tests failed. Check your IP_INVERSE_TABLE values.", file_obj)
+    if file_obj:
+        file_obj.write(f"{prompt_text} {user_input}\n")
 
-# Main Execution
+    # Error Messages
+    if len(user_input) > 8:
+        log("Error input too long", file_obj)
+        return None
+    
+    if len(user_input) < 8:
+        log("Error input too short", file_obj)
+        return None
+
+    # Invalid Hex Characters Check
+    try:
+        int(user_input, 16)
+    except ValueError:
+        log("Error", file_obj)
+        return None
+
+    return user_input
+
+
 if __name__ == "__main__":
-    # Define the output filename
-    output_filename = "des8_output.txt"
+ 
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    # Open the file in write mode ('w')
+    output_filename = "des_output.txt"
+    
     with open(output_filename, "w") as f:
-        log("DES Task 8: Inverse Initial Permutation", f)
+        log(f"Run Timestamp: {current_time}", f)
+        log("==========================================", f)
+        log("Q8: DES Inverse Initial Permutation (IP^-1)", f)
+        log("Input: 32-bit L and 32-bit R (hex)", f)
+        log("==========================================", f)
 
-        test_input = "0x0000000000000000" 
+        # 2. Get Left Half
+        left_input = get_valid_half_input("Enter 32-bit Left  (L) hex (8 digits): ", f)
         
-        log(f"Input  (Hex): {test_input}", f)
+        if left_input is not None:
+            log("NEXT", f)
+            # 3. Get Right Half ( if Left was valid)
+            right_input = get_valid_half_input("Enter 32-bit Right (R) hex (8 digits): ", f)
+            
+            if right_input is not None:
+                log("NEXT", f)
+                
+                # 4. Combine as R || L (Swap logic for IP^-1)
+                combined_hex = right_input + left_input
+                
+                log("", f)
+                log("--- Results ---", f)
+                log(f"Combined (R||L)           : 0x{combined_hex.upper()}", f)
+                
+                # 5. Run Logic
+                cipher_text = inverse_initial_permutation(combined_hex)
+                log(f"Ciphertext (after IP^-1)  : {cipher_text}", f)
         
-        # Run the function
-        cipher_text = inverse_initial_permutation(test_input)
-        
-        log(f"Output (Hex): {cipher_text}", f)
-        log("-----------------------------------------------", f)
-        
-        # Run the verification tests
-        run_tests(file_obj=f)
-        
-        log("-----------------------------------------------", f)
+        log("------------------------------------------", f)
         log(f"Log saved to {output_filename}", f)
